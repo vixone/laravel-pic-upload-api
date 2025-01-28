@@ -33,9 +33,6 @@ jobs:
 
       #     - name: Run Tests
       #       run: php artisan test
-      - name: Check for ssh key
-        run: |
-          echo "${{ secrets.SSH_KEY }}"
 
       - name: Deploy PHP to Server
         if: ${{ success() }}
@@ -46,13 +43,11 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-                echo "Testing SSH connection..."
-                ssh -T -v -p ${{ secrets.SSH_PORT }} -i ${{ secrets.SSH_KEY }} ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}
-                cd domains/${{ vars.WEBSITE_FOLDER }}/${{ vars.SUBDOMAIN_FOLDER }}
-                git checkout main
-                git pull
-                composer install
-                php artisan migrate --force
-                php artisan config:cache
-                php artisan route:cache
-                php artisan view:cache
+            cd domains/${{ vars.WEBSITE_FOLDER }}/public_html/${{ vars.SUBDOMAIN_FOLDER }}
+            git checkout main
+            git pull
+            composer2 install
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
