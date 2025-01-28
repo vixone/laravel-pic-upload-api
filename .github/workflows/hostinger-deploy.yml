@@ -43,7 +43,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cd domains/${{ vars.WEBSITE_FOLDER }}/${{ vars.WEBSITE_FOLDER }}
+            cd domains/${{ vars.WEBSITE_FOLDER }}/${{ vars.SUBDOMAIN_FOLDER }}
             git checkout main
             git pull
             composer install
