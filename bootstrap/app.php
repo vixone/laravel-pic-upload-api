@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         //
         $middleware->statefulApi();
+        $middleware->alias([
+            'apiGuest' => \App\Http\Middleware\ApiGuest::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
