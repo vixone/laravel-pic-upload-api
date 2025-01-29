@@ -14,17 +14,24 @@ class ImageControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp(); // Call parent setup
+
+        // Create a user and authenticate them using Sanctum
+        $this->user = User::factory()->create();
+        Sanctum::actingAs($this->user);
+    }
+
     public function test_user_can_list_images()
     {
-        $user = User::factory()->create();
-        Sanctum::actingAs($user); // Simulate authenticated user
-
         // Create test images in the database
         Image::factory()->count(3)->create();
 
         // Make a GET request to the index route
         $response = $this->getJson('/api/image');
-        $response->dumpHeaders();
 
         // Assert response is successful and has the expected structure
         $response->assertStatus(200)
@@ -63,7 +70,7 @@ class ImageControllerTest extends TestCase
 
         $file = UploadedFile::fake()->create('test.txt', 10); // Invalid file type
 
-        $response = $this->postJson('/api/images', [
+        $response = $this->postJson('/api/image', [
             'image' => $file,
         ]);
 
@@ -80,7 +87,7 @@ class ImageControllerTest extends TestCase
 
         $image = Image::create(['path' => $path, 'label' => 'To be deleted']);
 
-        $response = $this->deleteJson("/api/images/{$image->id}");
+        $response = $this->deleteJson("/api/image/{$image->id}");
 
         $response->assertStatus(200)
             ->assertJson(['message' => 'Image deleted successfully']);
